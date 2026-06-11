@@ -1,0 +1,21 @@
+name: blog-authoring
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  # Node.js toolchain (blog dev server + build)
+  - nodejs=20.*
+  # Python authoring tools
+  - python=3.11
+  - jupyterlab=4.*
+  - notebook=7.*
+  - numpy=1.*
+  - pandas=2.*
+  - scipy=1.*
+  - matplotlib=3.*
+  - pip
+  - pip:
+    - plotly==5.*
+    - kaleido==0.2.*     # static image export from Plotly
+    - nbformat>=5.9
+    - nbconvert>=7.0

@@ -1,0 +1,83 @@
+---
+title: "CRISPR Delivery: The Last Mile Problem"
+slug: "crispr-delivery"
+arm: "translational-biology"
+date: "2026-05-05"
+tags: ["CRISPR", "gene-therapy", "LNPs", "AAV", "delivery"]
+description: "The molecular scissors are ready. Getting them to the right cell in the right organ is still the hard part."
+draft: false
+---
+
+CRISPR-Cas9 has been editing genomes in academic labs since 2012. The gap between *can edit* and *can treat patients* is almost entirely a delivery problem. This post unpacks the three dominant delivery modalities and where each breaks down.
+
+## What needs to get in
+
+A functional CRISPR edit requires two things to co-localize inside the target cell nucleus:
+1. The **guide RNA (gRNA)** — a 20-nucleotide sequence complementary to the genomic target
+2. The **Cas9 nuclease** — a ~4.2 kDa protein or its mRNA equivalent
+
+The combined cargo (~4.5 kb of mRNA + 100 nt gRNA, or a ~6 MDa ribonucleoprotein) must:
+- Survive the bloodstream without degradation
+- Evade the immune system
+- Cross the endothelial barrier (for non-liver targets)
+- Enter the target cell (receptor-mediated endocytosis)
+- Escape the endosome before lysosomal degradation
+- Enter the nucleus
+
+Each step is a bottleneck. The industry refers to this collectively as the **"last mile problem"**.
+
+## Adeno-associated virus (AAV)
+
+AAV is the gold standard for *in vivo* gene therapy. Its natural tropism for post-mitotic cells (neurons, cardiomyocytes, hepatocytes) and well-characterized serotype-tissue relationships make it predictable.
+
+**Strengths:**
+- Long-term expression from episomal DNA (doesn't integrate, low oncogenic risk)
+- Multiple serotypes with defined tissue tropism (AAV9 → CNS, AAV8 → liver, AAVrh10 → muscle)
+- Clinical track record (Luxturna, Zolgensma)
+
+**Limitations:**
+- **4.7 kb packaging capacity** — Cas9 from *S. pyogenes* is 4.2 kb, barely fitting with minimal promoter and gRNA expression cassette. Dual-vector split-Cas9 approaches exist but halve efficiency.
+- **Pre-existing immunity** — up to 70% of humans have neutralizing antibodies to common serotypes from prior natural infections. Re-dosing is essentially impossible.
+- **Manufacturing cost** — $\sim$\$500K–\$1M per patient dose at commercial scale.
+
+<Callout type="warning">
+AAV integrates at low frequency (~0.1%), but in rapidly dividing cells this can drive clonal expansion. The 2022 death in a systemic AAV-delivered gene therapy trial has prompted FDA re-evaluation of high-dose AAV safety in non-dividing and dividing tissues alike.
+</Callout>
+
+## Lipid nanoparticles (LNPs)
+
+LNPs became clinically validated via the COVID-19 mRNA vaccines. The core structure is a ~100 nm particle with an ionizable lipid that is neutral at physiological pH (minimizing toxicity) but becomes cationic at endosomal pH (promoting endosomal escape).
+
+**The four-component formulation:**
+1. **Ionizable lipid** (e.g., MC3, ALC-0315) — enables pH-dependent endosomal escape
+2. **Helper lipid** (DSPC) — structural stability
+3. **Cholesterol** — membrane fluidity
+4. **PEGylated lipid** — prevents aggregation and immune recognition
+
+**For CRISPR:** LNPs can carry Cas9 mRNA + gRNA. Since mRNA is transient, the editing window is days (reducing off-target effects). Intellia's ITX-4001 uses LNPs and showed ~90% ATTR knockdown in Phase 1.
+
+**The liver trap:** LNPs are efficiently taken up by hepatocytes via ApoE-mediated endocytosis. For liver diseases (ATTR amyloidosis, hemophilia, hypercholesterolemia), this is a feature. For everything else, it is the problem.
+
+## Extracellular vesicles and engineered exosomes
+
+The newest entrant. Cells naturally secrete ~30–150 nm vesicles that carry RNA cargo to neighboring cells. Loading CRISPR into exosomes promises:
+- Low immunogenicity (self-derived membranes)
+- Natural cell tropism
+- No packaging size limit
+
+The problem: loading efficiency is low (~0.01 molecules of mRNA per vesicle), and scale-up is technically demanding. No LNP-competitive clinical data yet, but Codiak, Evox, and Carmine Therapeutics are all in early trials.
+
+## A rough comparison
+
+| Property | AAV | LNP | Exosome |
+|---|---|---|---|
+| Payload size | 4.7 kb max | No limit | No limit |
+| Duration | Long-term | Transient | Transient |
+| Primary tissue | CNS, liver, muscle | Liver | TBD |
+| Immunogenicity | High (pre-existing Ab) | Moderate (anti-PEG) | Low |
+| Manufacturing | Complex | Scalable | Hard to scale |
+| Clinical stage | Approved | Phase 1–3 | Phase 1 |
+
+## Where the field is going
+
+The most exciting development is **tissue-targeted LNPs** — replacing the ApoE-dependent liver targeting with selective organ targeting (SORT) lipids or antibody-conjugated particles. Tian et al. (2020) showed that adding a fifth, charged lipid to the formulation shifts tropism from liver to spleen or lung in mice. Whether this translates to humans is the next frontier.

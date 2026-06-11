@@ -1,0 +1,87 @@
+---
+title: "FDA's AI/ML Action Plan: What Clinical Researchers Need to Know"
+slug: "fda-ai-guidance"
+arm: "tools-and-news"
+date: "2026-04-22"
+tags: ["FDA", "AI", "regulation", "clinical-research", "software-as-medical-device"]
+description: "The FDA's evolving framework for AI-based Software as a Medical Device — the key concepts, open questions, and practical implications for researchers building clinical AI."
+draft: false
+---
+
+The FDA has been regulating software since the 1980s, but AI/ML-based medical devices present a genuinely novel challenge: they can change after deployment. The agency's response — the AI/ML-Based Software as a Medical Device (SaMD) Action Plan and the 2024 AI Framework — is still evolving. Here is what matters now.
+
+## The core regulatory tension
+
+Traditional medical device approval assumes the device is fixed. A blood pressure cuff approved in 2010 works the same way in 2026. An AI model trained on 2020 data and continuously retrained on incoming patient data is a fundamentally different regulatory object.
+
+The FDA calls this the **"predetermined change control plan"** (PCCP) problem: can a manufacturer specify in advance what kinds of model updates are permissible without re-submission?
+
+The 2023 final guidance on PCCPs says yes, under conditions:
+1. Changes must be within a pre-specified scope (e.g., "performance improvements that do not expand indications for use")
+2. The manufacturer must demonstrate that changes can be validated against pre-specified performance criteria
+3. Post-market monitoring must be continuous and transparent
+
+## SaMD classification
+
+Not all clinical AI requires FDA clearance. The classification depends on the intended use:
+
+| Risk level | Example | Regulatory pathway |
+|---|---|---|
+| Low (non-significant risk) | Administrative scheduling AI | Generally exempt |
+| Moderate | Decision support for radiology reads | 510(k) substantial equivalence |
+| High | Autonomous diagnosis in a screening program | De Novo or PMA |
+
+The key distinction is **clinical decision support (CDS) vs. autonomous decision-making**. Under the 21st Century Cures Act, CDS software that a clinician can review, modify, and override before acting on it is generally exempt from FDA oversight. Software that makes autonomous clinical decisions without clinician review is regulated.
+
+<Callout type="note">
+The FDA's 2024 Final Rule on Digital Health redrew the line between exempt CDS and regulated SaMD. The current interpretation: if the software's output is the decision (rather than input to a clinician's decision), it is SaMD regardless of whether a clinician could theoretically override it.
+</Callout>
+
+## The Total Product Life Cycle (TPLC) framework
+
+The FDA has moved toward lifecycle-based regulation, borrowing from the pharmaceutical GMP/GCP model. For AI/ML SaMD, this means:
+
+**Pre-market:**
+- Training data documentation (source, curation, preprocessing)
+- Algorithm transparency (architecture, hyperparameters, training procedure)
+- Performance on a locked test set (representative of intended use population)
+- Bias evaluation across demographic subgroups
+
+**Post-market:**
+- Real-world performance monitoring (distribution shift detection)
+- Incident reporting when performance falls below pre-specified thresholds
+- Annual summary reports to FDA
+
+The practical implication: a clinical AI product is never "done." Ongoing monitoring infrastructure is a regulatory requirement, not optional engineering.
+
+## What the 2024 AI Framework adds
+
+The March 2024 document introduced several new concepts:
+
+**Transparency obligations:** Patients must be informed when AI is used in their care and must have the right to know the basis for AI-supported decisions. This goes further than previous guidance.
+
+**Accountability for foundation models:** If a clinical AI is built on a foundation model (GPT-class LLM, large vision model), the regulatory accountability does not transfer to the foundation model developer. The device manufacturer is responsible for the full behavior of the integrated system, including behaviors that emerge from the foundation model.
+
+**International harmonization:** The FDA, Health Canada, and MHRA (UK) issued joint guiding principles in 2023. The frameworks are substantially aligned, which matters for global clinical trial AI tools.
+
+## Practical checklist for researchers
+
+If you are building or evaluating clinical AI for eventual regulatory submission:
+
+- [ ] Document your intended use precisely — the IFU (Instructions for Use) drives the regulatory pathway
+- [ ] Define your reference standard before you collect data
+- [ ] Pre-register your performance thresholds (sensitivity, specificity, AUC) before final validation
+- [ ] Stratify performance by sex, age, race/ethnicity, and site in your validation cohort
+- [ ] Plan your PCCP before training — what kinds of updates will you make post-deployment?
+- [ ] Set up distribution monitoring infrastructure before launch (input feature drift, output distribution shift)
+- [ ] Consult FDA's Q-Submission program early — pre-submission meetings are free and save months
+
+## The open questions
+
+Despite the 2024 Framework, several critical issues remain unresolved:
+
+1. **Liability for AI errors:** If a FDA-cleared AI makes a wrong diagnosis, who is liable — the device manufacturer, the clinician, or the hospital?
+2. **Continuous learning:** The PCCP framework allows controlled updates, but fully autonomous continuous learning (retraining on incoming data without human review of each update) is not yet addressed.
+3. **Generative AI in clinical documentation:** LLMs generating clinical notes, discharge summaries, or prior authorization letters — the FDA has not yet issued guidance on whether or how these are regulated.
+
+The field is moving faster than the regulation. That gap is both an opportunity (clinical researchers can deploy AI tools with relatively low regulatory burden today) and a risk (the regulatory bar will rise, and tools deployed now may need redesign for compliance later).

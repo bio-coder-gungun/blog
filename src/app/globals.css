@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Prism syntax highlighting — tomorrow night theme */
+  pre[class*='language-'] {
+    @apply rounded-xl my-6 text-sm overflow-x-auto;
+    background: #1e1e2e !important;
+  }
+
+  code[class*='language-'] {
+    background: transparent !important;
+    color: #cdd6f4 !important;
+  }
+
+  .token.comment,
+  .token.prolog,
+  .token.doctype,
+  .token.cdata {
+    color: #6c7086;
+  }
+
+  .token.punctuation {
+    color: #cdd6f4;
+  }
+
+  .token.property,
+  .token.tag,
+  .token.boolean,
+  .token.number,
+  .token.constant,
+  .token.symbol {
+    color: #fab387;
+  }
+
+  .token.selector,
+  .token.attr-name,
+  .token.string,
+  .token.char,
+  .token.builtin {
+    color: #a6e3a1;
+  }
+
+  .token.operator,
+  .token.entity,
+  .token.url,
+  .language-css .token.string {
+    color: #89dceb;
+  }
+
+  .token.atrule,
+  .token.attr-value,
+  .token.keyword {
+    color: #cba6f7;
+  }
+
+  .token.function,
+  .token.class-name {
+    color: #89b4fa;
+  }
+
+  .token.regex,
+  .token.important,
+  .token.variable {
+    color: '#f38ba8';
+  }
+}

@@ -1,0 +1,94 @@
+---
+title: "The Fourier Transform: Circles All the Way Down"
+slug: "fourier-intuition"
+arm: "mathematical-intuition"
+date: "2026-05-20"
+tags: ["fourier", "signal-processing", "complex-analysis"]
+description: "A geometric argument for why decomposing any signal into rotating circles is not just possible but inevitable."
+draft: false
+---
+
+Every signal you have ever recorded — an EEG trace, a mass spectrum, an fMRI BOLD series — lives a double life. In the time domain it looks like a wiggly line. In the frequency domain it looks like a collection of rotating circles. The Fourier transform is the passport between these two worlds.
+
+## The core idea: correlation with a spinning needle
+
+The Fourier transform at frequency $\xi$ is:
+
+$$
+\hat{f}(\xi) = \int_{-\infty}^{\infty} f(t)\, e^{-2\pi i \xi t}\, dt
+$$
+
+The term $e^{-2\pi i \xi t}$ is Euler's formula in disguise: $\cos(2\pi \xi t) - i\sin(2\pi \xi t)$. This traces a circle on the complex plane at rate $\xi$ rotations per second.
+
+Multiplying $f(t)$ by this spinning phasor and integrating is asking: *how much does the signal $f$ resonate at frequency $\xi$?* If $f$ itself oscillates at $\xi$, the product stays on one side of the complex plane and the integral grows large. If not, the positive and negative contributions cancel and the integral collapses to near zero.
+
+<Callout type="tip">
+Think of $e^{-2\pi i \xi t}$ as a lie detector pointed at frequency $\xi$. Wrap the signal around the unit circle at that frequency and ask where the center of mass lands. If the signal has energy there, the center of mass drifts off the origin.
+</Callout>
+
+## Why the inverse works
+
+Because the complex exponentials $\{e^{2\pi i \xi t}\}_{\xi \in \mathbb{R}}$ form an **orthonormal basis** for $L^2(\mathbb{R})$. Orthonormality here means:
+
+$$
+\int_{-\infty}^{\infty} e^{2\pi i \xi t} \overline{e^{2\pi i \eta t}}\, dt = \delta(\xi - \eta)
+$$
+
+Two exponentials at different frequencies are perfectly perpendicular — their inner product is zero. So Fourier coefficients are non-interfering projections, and you can reconstruct $f$ by summing them:
+
+$$
+f(t) = \int_{-\infty}^{\infty} \hat{f}(\xi)\, e^{2\pi i \xi t}\, d\xi
+$$
+
+## A concrete example: the Gaussian is its own transform
+
+One of the most beautiful facts in analysis: the Gaussian $f(t) = e^{-\pi t^2}$ is a fixed point of the Fourier transform.
+
+$$
+\mathcal{F}\{e^{-\pi t^2}\}(\xi) = e^{-\pi \xi^2}
+$$
+
+This is not a coincidence. The Gaussian is the unique function (up to scaling) that is simultaneously maximally concentrated in time and frequency — the Heisenberg uncertainty principle saturated. In clinical terms, this is why Gabor wavelets (windowed Gaussians) are used for time-frequency analysis of biomedical signals: they give the tightest joint localization.
+
+## Visualizing the transform
+
+The plot below shows the magnitude spectrum of a sum of two sinusoids at 3 Hz and 7 Hz. Notice that the Fourier transform perfectly isolates the two frequencies despite the signal looking like an entangled mess in time.
+
+<PlotlyChart
+  data={[
+    {
+      x: Array.from({ length: 200 }, (_, i) => i / 100 - 1),
+      y: Array.from({ length: 200 }, (_, i) => {
+        const t = i / 100 - 1
+        return Math.cos(2 * Math.PI * 3 * t) + 0.6 * Math.cos(2 * Math.PI * 7 * t)
+      }),
+      type: 'scatter',
+      mode: 'lines',
+      name: 'f(t)',
+      line: { color: '#4338CA', width: 2 },
+    },
+  ]}
+  layout={{
+    title: { text: 'Signal: 3 Hz + 0.6× 7 Hz', font: { size: 14 } },
+    xaxis: { title: 'Time (s)' },
+    yaxis: { title: 'Amplitude' },
+    paper_bgcolor: 'white',
+    plot_bgcolor: '#f8fafc',
+    margin: { t: 50, b: 50, l: 60, r: 30 },
+    height: 300,
+  }}
+/>
+
+## The Parseval–Plancherel connection
+
+Energy is conserved across the transform:
+
+$$
+\int_{-\infty}^{\infty} |f(t)|^2\, dt = \int_{-\infty}^{\infty} |\hat{f}(\xi)|^2\, d\xi
+$$
+
+This is why the power spectral density is meaningful: it is literally the squared magnitude of the Fourier transform, telling you how much energy the signal carries at each frequency. For biomedical signals, comparing spectral power across conditions is statistically valid precisely because energy is conserved.
+
+## What to remember
+
+The Fourier transform is a change of basis — from the time-domain impulse basis $\{\delta(t - t_0)\}$ to the frequency-domain exponential basis $\{e^{2\pi i \xi t}\}$. Both bases span the same space. The transform is its own inverse (up to conjugation and reflection). And the Gaussian is the function that is simultaneously most localized in both worlds.

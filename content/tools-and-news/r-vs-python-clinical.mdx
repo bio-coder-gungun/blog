@@ -1,0 +1,104 @@
+---
+title: "R vs Python for Clinical Data Scientists in 2026"
+slug: "r-vs-python-clinical"
+arm: "tools-and-news"
+date: "2026-05-28"
+tags: ["R", "python", "clinical-data-science", "tools", "biostatistics"]
+description: "A practical comparison for clinical researchers — not which language is better, but which one to reach for first depending on the task."
+draft: false
+---
+
+This debate has been going since at least 2012. In clinical research specifically, it is more constrained and more tractable than the general data science version. Here is an opinionated breakdown.
+
+## The landscape has consolidated
+
+As of 2026:
+- **R** dominates academic biostatistics, regulatory submissions (SAS is still king there but R is an accepted alternative since FDA's 2023 guidance), survival analysis, and mixed-effects modeling
+- **Python** dominates ML/AI integration, bioinformatics pipelines, data engineering, and any workflow that needs to talk to APIs or cloud infrastructure
+
+The question is rarely either/or. It is: **which do you reach for first?**
+
+## Where R wins clearly
+
+### 1. Survival analysis
+
+The `survival` package (Terry Therneau, maintained since 1984) is the reference implementation for Cox models, Kaplan-Meier curves, and competing risks. No Python equivalent matches its breadth and regulatory pedigree.
+
+```r
+library(survival)
+
+fit <- coxph(Surv(time, event) ~ trt + age + strata(center),
+             data = trial_data,
+             ties = "efron")
+
+summary(fit)
+```
+
+The `strata()` term handles stratified randomization correctly — something that requires manual coding in Python's `lifelines`.
+
+### 2. Mixed-effects models
+
+`lme4` and `nlme` for linear/nonlinear mixed models, `glmmTMB` for zero-inflated and negative binomial variants. These are the workhorse models for repeated-measures clinical data (PK/PD, longitudinal biomarkers, multi-site trials).
+
+### 3. CDISC/ADaM datasets and regulatory submissions
+
+The `admiral` package (Roche/GSK open source) generates Analysis Data Model (ADaM) datasets from SDTM directly in R. The FDA's 2023 guidance explicitly lists R as an acceptable language for statistical analysis in regulatory submissions.
+
+### 4. Visualization for publication
+
+`ggplot2` produces publication-quality figures with less code than matplotlib. `ggsurvfit` for Kaplan-Meier, `forestplot` for meta-analysis, `gtsummary` for Table 1 — the clinical visualization ecosystem in R is unmatched.
+
+## Where Python wins clearly
+
+### 1. Machine learning on clinical data
+
+scikit-learn, XGBoost, LightGBM, and PyTorch are the ML stack. Integrating a gradient-boosted model into a clinical prediction pipeline requires Python. Doing it in R is possible but swimming upstream.
+
+### 2. Bioinformatics pipelines
+
+Snakemake and Nextflow workflows (the standard for genomics) are Python-adjacent. Most tools in the GATK/nf-core ecosystem are Python or Java. Parsing VCF files, running variant annotation, integrating with cloud storage — Python.
+
+### 3. NLP on clinical notes
+
+spaCy, Hugging Face Transformers, and clinical NLP models (BioBERT, ClinicalBERT, Med-PaLM fine-tunes) are Python-only. If you're extracting structured information from EHRs, you're using Python.
+
+### 4. APIs and production deployment
+
+REST API clients, database connectors (SQLAlchemy, psycopg2), cloud SDKs (boto3, google-cloud), and model serving (FastAPI, BentoML) are Python. If your output needs to talk to a hospital system or a clinical data warehouse, Python is the path of least resistance.
+
+## The interoperability path
+
+The `reticulate` package in R calls Python from within an R session. `rpy2` does the reverse. In practice:
+
+```python
+# Python: run R's survival analysis from Python
+import rpy2.robjects as ro
+from rpy2.robjects import pandas2ri
+
+pandas2ri.activate()
+ro.r('library(survival)')
+ro.r('fit <- coxph(Surv(time, event) ~ trt, data=trial_df)')
+```
+
+This works but adds debugging complexity. Better practice: use each language for its strength and serialize results (Parquet, CSV, HDF5) at the handoff.
+
+## A decision heuristic
+
+```
+Is the primary output a regulatory submission? → R
+Is the primary output an ML model or API? → Python
+Is the primary method survival analysis or LME? → R
+Is the primary method neural networks or NLP? → Python
+Are you primarily a biostatistician by training? → R (stay in your strength)
+Are you primarily an engineer by training? → Python (stay in your strength)
+Neither? → Learn R first for clinical contexts.
+```
+
+## Tooling that narrows the gap
+
+- **Quarto** renders R and Python code blocks in the same document (great for reproducible clinical reports)
+- **Posit Workbench** (formerly RStudio Server) runs R and Python kernels side by side
+- **DuckDB** is accessible from both languages and handles large clinical datasets without Spark overhead
+- **Polars** is Python's answer to `data.table` and now matches it for speed on datasets up to ~50 GB
+
+The choice of language matters less than reproducibility hygiene: version-pinned environments (`renv` for R, `uv` or `conda` for Python), version-controlled analysis code, and outputs generated programmatically rather than by hand.

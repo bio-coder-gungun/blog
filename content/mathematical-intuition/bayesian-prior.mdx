@@ -1,0 +1,83 @@
+---
+title: "Bayesian Priors Are Not Cheating"
+slug: "bayesian-prior"
+arm: "mathematical-intuition"
+date: "2026-04-10"
+tags: ["bayesian", "statistics", "inference", "clinical-trials"]
+description: "Why encoding prior knowledge into a statistical model is not a bias — it's a logical necessity — and how to do it carefully."
+draft: false
+---
+
+The most common objection to Bayesian methods in clinical research is that priors are subjective. The hidden assumption is that frequentist methods are objective. Neither is true. Every statistical model encodes assumptions; Bayesian models just write them down explicitly.
+
+## The update equation
+
+Bayes' theorem in its simplest form:
+
+$$
+P(\theta \mid \mathcal{D}) = \frac{P(\mathcal{D} \mid \theta)\, P(\theta)}{P(\mathcal{D})}
+$$
+
+where:
+- $\theta$ is the parameter of interest (e.g., treatment effect)
+- $\mathcal{D}$ is the observed data
+- $P(\theta)$ is the **prior** — what we know before seeing $\mathcal{D}$
+- $P(\mathcal{D} \mid \theta)$ is the **likelihood** — how probable is the data given $\theta$?
+- $P(\theta \mid \mathcal{D})$ is the **posterior** — what we know after
+
+## Why a flat prior is still a prior
+
+A uniform prior $P(\theta) \propto 1$ seems uninformative, but it implies:
+- A treatment effect of $\delta = 100$ is just as plausible a priori as $\delta = 0.01$
+- The parameter is equally likely to live anywhere on the real line
+
+In clinical trials, this is almost never scientifically defensible. If we are testing a new kinase inhibitor, we have decades of pharmacology telling us what effect sizes are biologically plausible.
+
+<Callout type="note">
+A flat prior on $\theta$ is not the same as a flat prior on $e^\theta$ or $\theta^2$. Priors are not invariant to reparameterization. This is a fundamental (and often ignored) issue with the frequentist claim of objectivity via uninformative priors.
+</Callout>
+
+## The conjugate Gaussian case
+
+When both prior and likelihood are Gaussian, the posterior is also Gaussian and has a closed form. Suppose:
+
+$$
+\theta \sim \mathcal{N}(\mu_0, \sigma_0^2) \quad \text{(prior)}
+$$
+$$
+x_i \stackrel{\text{iid}}{\sim} \mathcal{N}(\theta, \sigma^2) \quad \text{(likelihood)}
+$$
+
+After observing $n$ data points with sample mean $\bar{x}$, the posterior is:
+
+$$
+\theta \mid \mathcal{D} \sim \mathcal{N}(\mu_n, \sigma_n^2)
+$$
+
+where the posterior precision (inverse variance) is the sum of precisions:
+
+$$
+\frac{1}{\sigma_n^2} = \frac{1}{\sigma_0^2} + \frac{n}{\sigma^2}
+$$
+
+and the posterior mean is a precision-weighted average:
+
+$$
+\mu_n = \sigma_n^2 \left(\frac{\mu_0}{\sigma_0^2} + \frac{n\bar{x}}{\sigma^2}\right)
+$$
+
+As $n \to \infty$, the data overwhelm the prior: $\mu_n \to \bar{x}$ and $\sigma_n^2 \to \sigma^2/n$. A well-chosen prior only matters when $n$ is small — exactly when it is most needed.
+
+## Using historical data as a prior: power priors
+
+The **power prior** framework (Ibrahim & Chen, 2000) provides a principled way to borrow from a historical study with $n_0$ observations and likelihood $L_0(\theta)$:
+
+$$
+P(\theta) \propto L_0(\theta)^{a_0}\, \pi_0(\theta)
+$$
+
+The hyperparameter $a_0 \in [0, 1]$ controls how much historical information is borrowed. When $a_0 = 0$, no borrowing. When $a_0 = 1$, the historical study is treated as if it were current data. The FDA has issued guidance on this framework for clinical trial design in rare diseases.
+
+## The bottom line
+
+Priors encode domain knowledge. In early-phase oncology trials with $n = 20$, domain knowledge is the only thing keeping effect size estimates from flying off the real line. The question is not whether to use prior information — it is whether to use it transparently (Bayesian) or smuggle it in via sample size assumptions, endpoint selection, and analysis cut-offs (frequentist).
