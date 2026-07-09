@@ -18,6 +18,12 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Only deploy when a commit message contains "[deploy]", or when the
+    # workflow is triggered manually. Regular edits pushed to main are ignored,
+    # so you can stack changes and publish the whole batch with one [deploy] commit.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      contains(github.event.head_commit.message, '[deploy]')
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
